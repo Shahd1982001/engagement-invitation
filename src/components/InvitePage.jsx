@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { invite } from '../config/invite.js'
 import { dateParts } from '../utils/dateParts.js'
 import Monogram from './Monogram.jsx'
+import Ring3D from './Ring3D.jsx'
 
 export default function InvitePage({ reduce, ringArrived = false }) {
   const root = useRef(null)
@@ -29,7 +30,7 @@ export default function InvitePage({ reduce, ringArrived = false }) {
       {scene === 'names' ? (
         <section className="names-scene" aria-label="العروسين">
           <div className="floral-arch" aria-hidden="true" />
-          {ringArrived && <div className="arrived-ring" aria-hidden="true"><span /></div>}
+          {ringArrived && <Ring3D />}
           <div className="scene-logo"><Monogram a={invite.brideLatin} b={invite.groomLatin} /></div>
           <p className="scene-kicker">دعوة خطوبة</p>
           <h1><span>{invite.bride}</span><i aria-hidden="true">&amp;</i><span>{invite.groom}</span></h1>
