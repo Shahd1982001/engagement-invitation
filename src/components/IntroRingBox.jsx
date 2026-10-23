@@ -96,11 +96,9 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     go.current = () => {
       const d = reduce ? 0.9 : 2.4
       zoom = gsap.timeline({ onComplete: onDone })
-      zoom.to(st, { ringDepth: 1.8, ringRise: 2.7, scale: 2.5, duration: d * 0.62, ease: 'power2.in' }, 0)
-        .to(st, { scale: 0.82, duration: d * 0.38, ease: 'power2.out' }, d * 0.62)
+      zoom.to(st, { ringDepth: 2.8, ringRise: 4.2, scale: 6.5, duration: d, ease: 'power2.in' }, 0)
         .to(st, { spark: 1, duration: d * 0.55, ease: 'power1.in' }, 0)
-        .to(st, { spark: 0, duration: d * 0.35, ease: 'power1.out' }, d * 0.65)
-        .to(veilRef.current, { opacity: 1, duration: d * 0.45, ease: 'power1.in' }, d * 0.6)
+        .to(veilRef.current, { opacity: 1, duration: d * 0.45, ease: 'power1.in' }, d * 0.55)
     }
 
     return () => {
