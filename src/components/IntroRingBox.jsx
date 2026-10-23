@@ -54,9 +54,9 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     const key = new THREE.DirectionalLight('#fff0d8', 1.15); key.position.set(2, 6, 4); scene.add(key)
     const rimL = new THREE.DirectionalLight('#b83d61', 0.35); rimL.position.set(-4, 2, -3); scene.add(rimL)
 
-    const st = { open: 0, ringRise: 0.55, dolly: 0, scale: 1, spark: 0 }
-    const camBase = new THREE.Vector3(), camEnd = new THREE.Vector3(0, 1.6, 1.9)
-    const lookA = new THREE.Vector3(0, 1.1, 0), lookB = new THREE.Vector3(0, 1.5, 0), look = new THREE.Vector3()
+    const st = { open: 0, ringRise: 0.55, ringDepth: 0, scale: 1, spark: 0 }
+    const camBase = new THREE.Vector3()
+    const look = new THREE.Vector3(0, 1.1, 0)
     let w = 1, h = 1
     const resize = () => {
       w = el.clientWidth; h = el.clientHeight; renderer.setSize(w, h); cam.aspect = w / h
@@ -73,10 +73,11 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
       lid.rotation.x = -st.open * 1.95
       ring.scale.setScalar(st.scale)
       ring.position.y = 0.82 + st.ringRise * 0.55
+      ring.position.z = st.ringDepth
       gemMat.envMapIntensity = 0.45 + st.spark * 0.55
       ringGlow.intensity = st.spark * 1.8
-      cam.position.lerpVectors(camBase, camEnd, st.dolly)
-      cam.lookAt(look.lerpVectors(lookA, lookB, st.dolly))
+      cam.position.copy(camBase)
+      cam.lookAt(look)
       renderer.render(scene, cam)
       ring.getWorldPosition(tmp); tmp.y += 0.12
       const dist = cam.position.distanceTo(tmp)
@@ -95,7 +96,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     go.current = () => {
       const d = reduce ? 0.9 : 2.4
       zoom = gsap.timeline({ onComplete: onDone })
-      zoom.to(st, { dolly: 1, ringRise: 2.7, scale: 2.5, duration: d * 0.62, ease: 'power2.in' }, 0)
+      zoom.to(st, { ringDepth: 1.8, ringRise: 2.7, scale: 2.5, duration: d * 0.62, ease: 'power2.in' }, 0)
         .to(st, { scale: 0.82, duration: d * 0.38, ease: 'power2.out' }, d * 0.62)
         .to(st, { spark: 1, duration: d * 0.55, ease: 'power1.in' }, 0)
         .to(st, { spark: 0, duration: d * 0.35, ease: 'power1.out' }, d * 0.65)

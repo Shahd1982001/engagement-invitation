@@ -8,11 +8,12 @@ h1,h2,.names{font-family:'Amiri',serif;font-weight:700}
 .veil{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:200}
 
 /* الافتتاحية: علبة الخاتم */
-.intro{position:fixed;inset:0;z-index:50;background:
-  linear-gradient(180deg,rgba(255,249,235,.82),rgba(247,228,211,.9)),
-  url(/assets/burgundy-florals.svg) center/cover no-repeat;overflow:hidden}
+.intro{position:fixed;inset:0;z-index:50;background:#f4eadb;overflow:hidden}
+.intro:before{content:'';position:absolute;inset:-28px;background:
+  linear-gradient(180deg,rgba(255,249,235,.62),rgba(247,228,211,.78)),
+  url(/assets/floral-arch-reference.png) center/cover no-repeat;filter:blur(18px);transform:scale(1.06)}
 .intro:after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.55),transparent 45%),linear-gradient(180deg,transparent 45%,rgba(111,35,54,.18));pointer-events:none}
-.intro-canvas{position:absolute;inset:0}
+.intro-canvas{position:absolute;inset:0;z-index:1}
 .intro-canvas canvas{display:block;width:100%;height:100%}
 .floating-petals{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .floating-petals i{position:absolute;top:-8%;width:12px;height:20px;border-radius:100% 0 100% 0;background:linear-gradient(135deg,#a83a58,#6f1834);opacity:.7;filter:drop-shadow(0 3px 3px rgba(79,18,35,.2));animation:petal-fall 7s linear infinite}
