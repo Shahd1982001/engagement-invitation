@@ -45,7 +45,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     lid.add(lidMesh, lidCavity, cavityRim)
     const ring = new THREE.Group(); ring.position.set(0, 1.45, 0)
     const band = new THREE.Mesh(geos[4], gold), gem = new THREE.Mesh(geos[5], gemMat)
-    gem.position.y = 0.37; gem.rotation.z = Math.PI; gem.scale.set(1, 1, 1); ring.add(band, gem)
+    gem.position.y = 0.3; gem.rotation.z = Math.PI; gem.scale.set(0.72, 0.72, 0.72); ring.add(band, gem)
     const ringGlow = new THREE.PointLight('#ffe8ad', 0, 2.8)
     ringGlow.position.set(0, 0.35, 0.18); ring.add(ringGlow)
     box.add(base, cushion, rimTrim, lid, ring)
