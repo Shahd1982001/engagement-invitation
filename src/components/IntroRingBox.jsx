@@ -31,7 +31,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     const gemMat = new THREE.MeshPhysicalMaterial({ color: '#fff8e8', roughness: 0.18, metalness: 0, clearcoat: 0.5, envMapIntensity: 0.45, flatShading: true })
 
     const geos = [new RoundedBoxGeometry(2.2, 1, 1.8, 4, 0.08), new RoundedBoxGeometry(2, 0.2, 1.6, 3, 0.05), new THREE.BoxGeometry(2.24, 0.04, 1.84),
-      new RoundedBoxGeometry(2.2, 0.55, 1.8, 4, 0.08), new THREE.TorusGeometry(0.3, 0.055, 24, 64), new THREE.OctahedronGeometry(0.1)]
+      new RoundedBoxGeometry(2.2, 0.55, 1.8, 4, 0.08), new THREE.TorusGeometry(0.3, 0.055, 24, 64), new THREE.ConeGeometry(0.14, 0.3, 8, 1, false)]
     const box = new THREE.Group(); scene.add(box)
     const base = new THREE.Mesh(geos[0], velvet); base.position.y = 0.5
     const cushion = new THREE.Mesh(geos[1], cushionMat); cushion.position.y = 0.98
@@ -45,7 +45,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     lid.add(lidMesh, lidCavity, cavityRim)
     const ring = new THREE.Group(); ring.position.set(0, 1.45, 0)
     const band = new THREE.Mesh(geos[4], gold), gem = new THREE.Mesh(geos[5], gemMat)
-    gem.position.y = 0.37; gem.scale.set(1, -1.25, 1); ring.add(band, gem)
+    gem.position.y = 0.37; gem.rotation.z = Math.PI; gem.scale.set(1, 1, 1); ring.add(band, gem)
     const ringGlow = new THREE.PointLight('#ffe8ad', 0, 2.8)
     ringGlow.position.set(0, 0.35, 0.18); ring.add(ringGlow)
     box.add(base, cushion, rimTrim, lid, ring)
