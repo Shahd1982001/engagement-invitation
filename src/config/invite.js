@@ -2,7 +2,7 @@
 export const invite = {
   bride: 'ليلى', groom: 'آدم',
   brideLatin: 'L', groomLatin: 'A',          // حرفا الشعار
-  line: 'يتشرّفان بدعوتكم لحضور حفل خطوبتهما',
+  line: 'لحضور حفل خطوبتنا',
   dateTime: '2026-12-10T20:00:00+02:00',      // تاريخ ووقت تجريبي (توقيت ليبيا)
   timeZone: 'Africa/Tripoli',
   placeName: 'اسم قاعة الاحتفال',

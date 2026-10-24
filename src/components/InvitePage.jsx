@@ -3,12 +3,37 @@ import gsap from 'gsap'
 import { invite } from '../config/invite.js'
 import { dateParts } from '../utils/dateParts.js'
 import Monogram from './Monogram.jsx'
-import Ring3D from './Ring3D.jsx'
 
-export default function InvitePage({ reduce, ringArrived = false }) {
+function CalendarScrap({ date }) {
+  const year = date.getFullYear()
+  const month = date.getMonth()
+  const selectedDay = date.getDate()
+  const firstDay = new Date(year, month, 1).getDay()
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const leadingDays = firstDay
+  const days = Array.from({ length: leadingDays + daysInMonth }, (_, index) => {
+    const day = index - leadingDays + 1
+    return day > 0 ? day : null
+  })
+  const weekdays = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج']
+
+  return (
+    <div className="calendar-grid" aria-label={`تقويم ${date.toLocaleDateString('ar-LY', { month: 'long', year: 'numeric' })}`}>
+      {weekdays.map((day) => <span className="calendar-weekday" key={day}>{day}</span>)}
+      {days.map((day, index) => (
+        <span className={day === selectedDay ? 'calendar-day selected' : 'calendar-day'} key={`${day}-${index}`}>
+          {day || ''}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+export default function InvitePage({ reduce }) {
   const root = useRef(null)
   const [scene, setScene] = useState('names')
   const d = dateParts(invite.dateTime, invite.timeZone)
+  const calendarDate = new Date(invite.dateTime)
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -30,31 +55,35 @@ export default function InvitePage({ reduce, ringArrived = false }) {
       {scene === 'names' ? (
         <section className="names-scene" aria-label="العروسين">
           <div className="floral-arch" aria-hidden="true" />
-          {ringArrived && <Ring3D />}
-          <div className="scene-logo"><Monogram a={invite.brideLatin} b={invite.groomLatin} /></div>
-          <p className="scene-kicker">دعوة خطوبة</p>
-          <h1><span>{invite.bride}</span><i aria-hidden="true">&amp;</i><span>{invite.groom}</span></h1>
-          <p className="scene-line">{invite.line}</p>
-          <div className="scene-people">
-            <img className="scene-person bride" src="/assets/bride.png" alt="العروس" />
-            <img className="scene-person groom" src="/assets/groom.png" alt="العريس" />
+          <div className="floating-petals" aria-hidden="true">
+            <i /><i /><i /><i /><i /><i /><i /><i />
           </div>
-          <button className="scene-next" onClick={() => setScene('letter')}>تفاصيل الدعوة</button>
+          <div className="names-content">
+            <div className="scene-logo">
+              <span className="client-logo" role="img" aria-label="شعار الدعوة" />
+            </div>
+            <p className="scene-kicker">دعوة خطوبة</p>
+            <h1><span>{invite.bride}</span><i aria-hidden="true">&amp;</i><span>{invite.groom}</span></h1>
+            <p className="engagement-quote">
+              <span>بسم الله الرحمن الرحيم</span>
+              <span>وبالحب تبدأ أجمل الحكايات، وعلى درب المودة نخطو أولى خطواتنا</span>
+            </p>
+            <button className="scene-next" onClick={() => setScene('letter')}>تفاصيل الدعوة</button>
+          </div>
         </section>
       ) : (
         <section className="letter-scene" aria-label="تفاصيل الدعوة">
+          <div className="floating-petals" aria-hidden="true">
+            <i /><i /><i /><i /><i /><i /><i /><i />
+          </div>
           <div className="floral-arch floral-arch-paper" aria-hidden="true" />
-          <div className="flower flower-one" aria-hidden="true">✿</div>
-          <div className="flower flower-two" aria-hidden="true">❀</div>
           <article className="invitation-paper">
-            <p className="paper-kicker">بسم الله الرحمن الرحيم</p>
             <h1>يسعدنا دعوتكم</h1>
-            <p className="paper-copy">{invite.line}</p>
+            <p className="paper-copy">لحضور حفل خطوبتنا</p>
             <div className="scraps" aria-label="تفاصيل المناسبة">
               <div className="scrap date-scrap">
-                <small>{d.weekday}</small>
-                <strong>{d.day}</strong>
-                <span>{d.month} {d.year}</span>
+                <small className="calendar-month">{d.month} {d.year}</small>
+                <CalendarScrap date={calendarDate} />
               </div>
               <div className="scrap time-scrap">
                 <small>الوقت</small>
@@ -68,7 +97,9 @@ export default function InvitePage({ reduce, ringArrived = false }) {
                 <a href={invite.mapsUrl} target="_blank" rel="noopener noreferrer">موقع المكان</a>
               </div>
             </div>
-            <div className="paper-monogram"><Monogram a={invite.brideLatin} b={invite.groomLatin} /></div>
+            <div className="paper-monogram">
+              <span className="client-logo" role="img" aria-label="شعار الدعوة" />
+            </div>
           </article>
           <button className="scene-back" onClick={() => setScene('names')}>الرجوع</button>
         </section>

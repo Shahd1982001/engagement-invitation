@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <>
-      {stage === 'intro' ? <IntroRingBox veilRef={veil} reduce={reduce} onDone={() => setStage('page')} /> : <InvitePage reduce={reduce} ringArrived />}
+      {stage === 'intro' ? <IntroRingBox veilRef={veil} reduce={reduce} onDone={() => setStage('page')} /> : <InvitePage reduce={reduce} />}
       <div className="veil" ref={veil} aria-hidden="true" />
     </>
   )
