@@ -4,7 +4,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import gsap from 'gsap'
 
-// علبة خاتم مخملية 3D: تنفتح تلقائيًا، ثم الضغط على الخاتم يقرّبنا منه ويدخل على الدعوة
+// علبة خاتم مخملية 3D: تلف وهي تنفتح، وبعد الضغط على الخاتم يرتفع وتتلاشى العلبة ويتوهج ثم تُفتح الدعوة
 export default function IntroRingBox({ onDone, veilRef, reduce }) {
   const mount = useRef(null), btn = useRef(null), go = useRef(() => {})
   const [phase, setPhase] = useState('closed') // closed | ready | going | fallback
@@ -23,19 +23,22 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     scene.environment = envRT.texture
     const cam = new THREE.PerspectiveCamera(36, 1, 0.1, 100)
 
-    const velvet = new THREE.MeshPhysicalMaterial({ color: '#4a0d20', roughness: 0.92, sheen: 0.35, sheenRoughness: 0.8, sheenColor: new THREE.Color('#8f304d'), envMapIntensity: 0.25 })
-    const cushionMat = new THREE.MeshPhysicalMaterial({ color: '#68152f', roughness: 0.95, sheen: 0.3, sheenColor: new THREE.Color('#9d4260') })
-    const innerVelvet = new THREE.MeshStandardMaterial({ color: '#250814', roughness: 1, metalness: 0, side: THREE.DoubleSide })
-    const innerRim = new THREE.MeshStandardMaterial({ color: '#5b1730', roughness: 1, metalness: 0, side: THREE.DoubleSide })
+    // مواد العلبة شفافة-قابلة للتلاشي (opacity يتغير في اللقطة السينمائية)
+    const velvet = new THREE.MeshPhysicalMaterial({ color: '#4a0d20', roughness: 0.92, sheen: 0.35, sheenRoughness: 0.8, sheenColor: new THREE.Color('#8f304d'), envMapIntensity: 0.25, transparent: true })
+    const cushionMat = new THREE.MeshPhysicalMaterial({ color: '#68152f', roughness: 0.95, sheen: 0.3, sheenColor: new THREE.Color('#9d4260'), transparent: true })
+    const innerVelvet = new THREE.MeshStandardMaterial({ color: '#250814', roughness: 1, metalness: 0, side: THREE.DoubleSide, transparent: true })
+    const innerRim = new THREE.MeshStandardMaterial({ color: '#5b1730', roughness: 1, metalness: 0, side: THREE.DoubleSide, transparent: true })
+    // ذهب خاص بزخرفة العلبة (منفصل عن ذهب الخاتم حتى لا يتلاشى معها)
+    const trimGold = new THREE.MeshStandardMaterial({ color: '#c5984d', metalness: 0.8, roughness: 0.34, envMapIntensity: 0.35, transparent: true })
     const gold = new THREE.MeshStandardMaterial({ color: '#c5984d', metalness: 0.8, roughness: 0.34, envMapIntensity: 0.35 })
-    const gemMat = new THREE.MeshPhysicalMaterial({ color: '#fff8e8', roughness: 0.18, metalness: 0, clearcoat: 0.5, envMapIntensity: 0.45, flatShading: true })
+    const gemMat = new THREE.MeshPhysicalMaterial({ color: '#fff8e8', roughness: 0.18, metalness: 0, clearcoat: 0.5, envMapIntensity: 0.45, flatShading: true, emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0 })
 
     const geos = [new RoundedBoxGeometry(2.2, 1, 1.8, 4, 0.08), new RoundedBoxGeometry(2, 0.2, 1.6, 3, 0.05), new THREE.BoxGeometry(2.24, 0.04, 1.84),
       new RoundedBoxGeometry(2.2, 0.55, 1.8, 4, 0.08), new THREE.TorusGeometry(0.3, 0.055, 24, 64), new THREE.ConeGeometry(0.14, 0.3, 8, 1, false)]
     const box = new THREE.Group(); scene.add(box)
     const base = new THREE.Mesh(geos[0], velvet); base.position.y = 0.5
     const cushion = new THREE.Mesh(geos[1], cushionMat); cushion.position.y = 0.98
-    const rimTrim = new THREE.Mesh(geos[2], gold); rimTrim.position.y = 1.0
+    const rimTrim = new THREE.Mesh(geos[2], trimGold); rimTrim.position.y = 1.0
     const lid = new THREE.Group(); lid.position.set(0, 1.02, -0.9)
     const lidMesh = new THREE.Mesh(geos[3], velvet); lidMesh.position.set(0, 0.275, 0.9)
     const lidCavity = new THREE.Mesh(new RoundedBoxGeometry(1.72, 0.025, 1.3, 6, 0.08), innerVelvet)
@@ -46,7 +49,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     const ring = new THREE.Group(); ring.position.set(0, 1.45, 0)
     const band = new THREE.Mesh(geos[4], gold), gem = new THREE.Mesh(geos[5], gemMat)
     gem.position.y = 0.35; gem.rotation.z = Math.PI; gem.scale.set(0.72, 0.45, 0.72); ring.add(band, gem)
-    const ringGlow = new THREE.PointLight('#ffe8ad', 0, 2.8)
+    const ringGlow = new THREE.PointLight('#ffe8ad', 0, 3.2)
     ringGlow.position.set(0, 0.35, 0.18); ring.add(ringGlow)
     box.add(base, cushion, rimTrim, lid, ring)
 
@@ -54,7 +57,9 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     const key = new THREE.DirectionalLight('#fff0d8', 1.15); key.position.set(2, 6, 4); scene.add(key)
     const rimL = new THREE.DirectionalLight('#b83d61', 0.35); rimL.position.set(-4, 2, -3); scene.add(rimL)
 
-    const st = { open: 0, ringRise: 0.55, ringDepth: 0, scale: 1, spark: 0 }
+    // spin: دوران العلبة أثناء الفتح | boxFade: تلاشي العلبة | flash: توهج الخاتم الأبيض
+    const st = { open: 0, spin: 1, ringRise: 0.55, ringDepth: 0, scale: 1, spark: 0, boxFade: 0, flash: 0 }
+    const boxMats = [velvet, cushionMat, innerVelvet, innerRim, trimGold]
     const camBase = new THREE.Vector3()
     const look = new THREE.Vector3(0, 1.1, 0)
     let w = 1, h = 1
@@ -69,13 +74,15 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     let raf
     const frame = () => {
       raf = requestAnimationFrame(frame)
-      const t = clock.getElapsedTime()
       lid.rotation.x = -st.open * 1.95
+      box.rotation.y = st.spin * Math.PI * 2
+      boxMats.forEach((m) => { m.opacity = 1 - st.boxFade })
       ring.scale.setScalar(st.scale)
       ring.position.y = 0.82 + st.ringRise * 0.55
       ring.position.z = st.ringDepth
       gemMat.envMapIntensity = 0.45 + st.spark * 0.55
-      ringGlow.intensity = st.spark * 1.8
+      gemMat.emissiveIntensity = st.flash * 0.9
+      ringGlow.intensity = st.spark * 1.8 + st.flash * 3.4
       cam.position.copy(camBase)
       cam.lookAt(look)
       renderer.render(scene, cam)
@@ -89,21 +96,36 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     frame()
 
     const open = gsap.timeline({ delay: reduce ? 0.2 : 0.9 })
-    open.to(st, { open: 1, duration: reduce ? 0.8 : 2.8, ease: 'power2.inOut' })
-      .add(() => setPhase('ready'))
+    open.to(st, { open: 1, duration: reduce ? 0.8 : 2.8, ease: 'power2.inOut' }, 0)
+    if (!reduce) open.to(st, { spin: 0, duration: 2.8, ease: 'power2.inOut' }, 0)
+    else st.spin = 0
+    open.add(() => setPhase('ready'))
 
     let zoom
     go.current = () => {
-      const d = reduce ? 0.9 : 2.4
       zoom = gsap.timeline({ onComplete: onDone })
-      zoom.to(st, { ringDepth: 2.8, ringRise: 4.2, scale: 6.5, duration: d, ease: 'power2.in' }, 0)
-        .to(st, { spark: 1, duration: d * 0.55, ease: 'power1.in' }, 0)
-        .to(veilRef.current, { opacity: 1, duration: d * 0.45, ease: 'power1.in' }, d * 0.55)
+      if (reduce) {
+        // ١) الخاتم ترتفع من العلبة
+        zoom.to(st, { ringRise: 3.1, ringDepth: 0.5, duration: 0.5, ease: 'power2.out' }, 0)
+        // ٢) العلبة تتلاشى بسرعة
+        zoom.to(st, { boxFade: 1, duration: 0.3, ease: 'power1.in' }, 0.15)
+        // ٣) توهج أبيض
+        zoom.to(st, { flash: 1, spark: 1, duration: 0.4, ease: 'power2.out' }, 0.45)
+        zoom.to(ringGlow.color, { r: 1, g: 1, b: 1, duration: 0.35 }, 0.45)
+        // ٤) ستارة بيضاء ثم فتح الصفحة
+        zoom.to(veilRef.current, { opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 0.8)
+      } else {
+        zoom.to(st, { ringRise: 3.1, ringDepth: 0.5, duration: 0.9, ease: 'power2.out' }, 0)
+        zoom.to(st, { boxFade: 1, duration: 0.45, ease: 'power1.in' }, 0.3)
+        zoom.to(st, { flash: 1, spark: 1, duration: 0.55, ease: 'power2.out' }, 0.75)
+        zoom.to(ringGlow.color, { r: 1, g: 1, b: 1, duration: 0.5 }, 0.8)
+        zoom.to(veilRef.current, { opacity: 1, duration: 0.7, ease: 'power2.inOut' }, 1.25)
+      }
     }
 
     return () => {
       open.kill(); zoom && zoom.kill(); cancelAnimationFrame(raf); window.removeEventListener('resize', resize)
-      ;[...geos, lidCavity.geometry, cavityRim.geometry, velvet, cushionMat, innerVelvet, innerRim, gold, gemMat, envRT, pm].forEach((o) => o.dispose && o.dispose())
+      ;[...geos, lidCavity.geometry, cavityRim.geometry, velvet, cushionMat, innerVelvet, innerRim, trimGold, gold, gemMat, envRT, pm].forEach((o) => o.dispose && o.dispose())
       renderer.dispose(); renderer.domElement.remove()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

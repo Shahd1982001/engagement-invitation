@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { invite } from '../config/invite.js'
 import { dateParts } from '../utils/dateParts.js'
-import RSVPDialog from './RSVPDialog.jsx'
 
 function CalendarScrap({ date }) {
   const year = date.getFullYear()
@@ -39,7 +38,6 @@ function whatsappLink(d) {
 
 export default function InvitePage({ reduce }) {
   const root = useRef(null)
-  const [rsvpOpen, setRsvpOpen] = useState(false)
   const [hint, setHint] = useState(true)
   const d = dateParts(invite.dateTime, invite.timeZone)
   const calendarDate = new Date(invite.dateTime)
@@ -123,7 +121,6 @@ export default function InvitePage({ reduce }) {
             </div>
           </div>
           <div className="paper-actions">
-            <button type="button" className="btn-gold" onClick={() => setRsvpOpen(true)}>تأكيد الحضور</button>
             {wa && (
               <a className="btn-line" href={wa} target="_blank" rel="noopener noreferrer">رد عبر واتساب</a>
             )}
@@ -133,7 +130,6 @@ export default function InvitePage({ reduce }) {
           </div>
         </article>
       </section>
-      {rsvpOpen && <RSVPDialog onClose={() => setRsvpOpen(false)} />}
     </main>
   )
 }

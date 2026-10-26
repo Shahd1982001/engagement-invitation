@@ -100,24 +100,6 @@ h1,h2,.names{font-family:'Amiri',serif;font-weight:700}
 .btn-gold:disabled{opacity:.6}
 .btn-line{border:1.5px solid var(--gold);color:var(--gold2);background:rgba(20,3,8,.35)}
 
-/* نافذة تأكيد الحضور */
-.modal{position:fixed;inset:0;z-index:100;background:rgba(10,2,5,.7);display:grid;align-items:end;justify-items:center}
-.sheet{position:relative;width:min(100%,480px);max-height:92svh;overflow:auto;padding:28px 22px 32px;border-radius:22px 22px 0 0;background:linear-gradient(180deg,#3a0a19,#220610);border:1px solid rgba(217,184,115,.4);display:grid;gap:16px}
-.sheet h2{font-size:1.8rem;color:var(--gold2);text-align:center}
-.x{position:absolute;top:8px;inset-inline-start:12px;font-size:1.8rem;width:44px;height:44px;color:var(--gold2)}
-form{display:grid;gap:16px}
-.field{display:grid;gap:6px;border:0;padding:0}
-label,legend{color:var(--gold2);font-size:.95rem}
-input:not([type=radio]),select{width:100%;min-height:50px;padding:10px 14px;border-radius:12px;border:1px solid rgba(217,184,115,.55);background:rgba(251,243,232,.08);color:var(--ivory);font:inherit}
-select option{color:#222}
-.choices{display:grid;gap:10px}
-.choices label{display:flex;gap:10px;align-items:center;min-height:50px;padding:0 14px;border:1px solid rgba(217,184,115,.4);border-radius:12px;color:var(--ivory);cursor:pointer}
-.choices label.on{border-color:var(--gold);background:rgba(217,184,115,.16)}
-.choices input{accent-color:var(--gold);width:18px;height:18px}
-.err{color:#ffc9b8;font-size:.88rem}
-.demo{font-size:.8rem;opacity:.7;text-align:center}
-.done{display:grid;gap:12px;justify-items:center;text-align:center;font-family:'Amiri',serif;font-size:1.35rem}
-.done .demo{font-family:'Tajawal'}
 @media (prefers-reduced-motion:reduce){.intro-hint.show,.ringfx,.envelope,.envelope-flap,.envelope-seal,.envelope-hint,.floating-petals i{animation:none}.envelope-flap{transform:rotateX(180deg);opacity:.5}.envelope-seal{opacity:0}}
 
 /* ===== صفحة الدعوة: صفحة واحدة بتمرير عمودي طبيعي ===== */
@@ -125,16 +107,22 @@ select option{color:#222}
   -webkit-overflow-scrolling:touch;scroll-behavior:smooth}
 .names-hero,.details-section{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
 .names-hero{min-height:100svh;justify-content:center;
-  padding:7svh 16px calc(12svh + env(safe-area-inset-bottom));
+  padding:14px 14px calc(14px + env(safe-area-inset-bottom));
   background:#f4eadb url(/assets/floral-arch-reference.png) center/cover no-repeat}
+/* تدرج ناعم أسفل قسم الأسماء يمهّد لمنطقة البلور */
+.names-hero::after{content:'';position:absolute;inset-inline:0;bottom:0;height:150px;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(244,234,219,0),rgba(244,234,219,.92))}
 .names-hero .floating-petals{z-index:0;opacity:.78}
 .floral-arch{position:absolute;inset:0;background:
   linear-gradient(180deg,rgba(255,250,239,.06),rgba(255,248,235,0) 45%,rgba(85,20,35,.2)),
   url(/assets/floral-arch-reference.png) center/cover no-repeat;
   opacity:.18;filter:saturate(.86);transform:scale(1.015)}
 .floral-arch:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(250,239,218,.12),rgba(38,8,18,.08) 55%,rgba(31,6,13,.45));pointer-events:none}
-.names-content{position:relative;z-index:1;width:min(100%,430px);padding:4svh 18px;
-  border:1px solid rgba(255,255,255,.42);border-radius:24px;background:rgba(255,255,255,.24);
+.names-content{position:relative;z-index:1;width:100%;max-width:430px;
+  min-height:calc(100svh - 28px - env(safe-area-inset-bottom));justify-content:center;
+  padding:5svh 18px;
+  border:1px solid rgba(255,255,255,.42);border-radius:28px;background:rgba(255,255,255,.24);
+  backdrop-filter:blur(7px) saturate(1.05);-webkit-backdrop-filter:blur(7px) saturate(1.05);
   box-shadow:0 12px 35px rgba(74,24,35,.1);display:flex;flex-direction:column;align-items:center}
 .scene-logo{margin-top:0}.client-logo{display:block;width:clamp(76px,12svh,108px);aspect-ratio:1;background:currentColor;color:#4a0a1c;mask:url(/assets/client-logo.png) center/contain no-repeat;-webkit-mask:url(/assets/client-logo.png) center/contain no-repeat}
 .scene-kicker,.paper-kicker{margin-top:1svh;color:#4a0a1c;font-size:.95rem;letter-spacing:.12em}
@@ -144,7 +132,7 @@ select option{color:#222}
 .engagement-quote span{display:block}.engagement-quote span+span{margin-top:.7svh}
 
 /* سهم التلميح بالتمرير — يختفي بعد أول سحب */
-.scroll-hint{position:absolute;z-index:2;bottom:max(4svh,18px);inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:2px;
+.scroll-hint{position:absolute;z-index:2;bottom:max(26px,calc(env(safe-area-inset-bottom) + 18px));inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:2px;
   color:#4a0a1c;transition:opacity .5s ease;pointer-events:none}
 .scroll-hint span{font-family:'Amiri',serif;font-size:1.05rem;text-shadow:0 1px 6px rgba(255,255,255,.8)}
 .scroll-hint svg{width:26px;height:26px;animation:hint-bob 1.8s ease-in-out infinite}
@@ -155,6 +143,11 @@ select option{color:#222}
 /* قسم التفاصيل وورقة الدعوة */
 .details-section{position:relative;padding:7svh 18px calc(9svh + env(safe-area-inset-bottom));
   background:#f4eadb url(/assets/floral-arch-reference.png) center/cover no-repeat}
+/* شريط بلور علوي يخفي الحد القاطع بين القسمين */
+.details-section::before{content:'';position:absolute;inset-inline:0;top:0;height:170px;z-index:1;pointer-events:none;
+  backdrop-filter:blur(16px) saturate(1.05);-webkit-backdrop-filter:blur(16px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,#000 8%,transparent 94%);mask-image:linear-gradient(180deg,#000 8%,transparent 94%);
+  background:linear-gradient(180deg,rgba(244,234,219,.5),rgba(244,234,219,0))}
 .details-section .floating-petals{z-index:3}
 .floral-arch-paper{opacity:.09;filter:saturate(.65);mix-blend-mode:multiply}
 .invitation-paper{position:relative;z-index:2;width:min(100%,430px);min-height:min(78svh,660px);margin:0 auto;padding:6svh 8% 4svh;color:#4b1823;background:rgba(255,248,235,.82);box-shadow:0 20px 50px rgba(0,0,0,.48);transform:rotate(-1deg);clip-path:polygon(1% 1%,98% 0,100% 98%,2% 100%,0 52%)}
@@ -163,12 +156,14 @@ select option{color:#222}
 .invitation-paper h1{position:relative;z-index:1;margin-top:1svh;font-size:clamp(2.8rem,11vw,4rem);color:#651f32}
 .paper-copy{position:relative;z-index:1;margin:1svh auto 3svh;max-width:280px;font-family:'Amiri',serif;font-size:1.15rem;line-height:1.8}
 .scraps{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.scrap{min-height:116px;padding:12px 8px;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff7e9;box-shadow:0 5px 12px rgba(61,22,26,.2);font-size:.85rem}
+.scrap{min-height:116px;padding:12px 8px;gap:2px;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff7e9;box-shadow:0 5px 12px rgba(61,22,26,.2);font-size:.85rem}
 .scrap:nth-child(1){transform:rotate(-3deg)}.scrap:nth-child(2){transform:rotate(3deg)}.scrap:nth-child(3){grid-column:1/-1;transform:rotate(-1deg);min-height:105px}
 .scrap small{color:#976164}.scrap strong{font-family:'Amiri',serif;line-height:1.2;color:#711f37}.date-scrap strong{font-size:2.8rem}.time-scrap strong{font-size:2rem}.place-scrap strong{font-size:1.35rem}
 .scrap span{font-size:.82rem}.scrap a{margin-top:4px;color:#8d3c50;text-decoration:underline;font-size:.88rem}
 .date-scrap{min-height:176px}
-.place-scrap{position:relative;overflow:hidden;border:1px solid rgba(106,27,48,.18)}
+.place-scrap{position:relative;overflow:hidden;border:1px solid rgba(106,27,48,.18);
+  padding:30px 12px 28px;gap:6px}
+.place-scrap a{margin-top:7px}
 .place-scrap:before,.place-scrap:after{position:absolute;left:12px;right:12px;color:#741f39;font-family:serif;font-size:.9rem;letter-spacing:.35em;opacity:.7}
 .place-scrap:before{content:'✦  ❦  ✦';top:5px}
 .place-scrap:after{content:'✦  ❦  ✦';bottom:3px}
