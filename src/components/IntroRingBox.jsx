@@ -51,9 +51,6 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     const velvet = new THREE.MeshPhysicalMaterial({ color: '#4a0d20', roughness: 0.88, sheen: 0.55, sheenRoughness: 0.75, sheenColor: new THREE.Color('#a23a5c'), envMapIntensity: 0.3, transparent: true, bumpMap: bump, bumpScale: 0.025 })
     const cushionMat = new THREE.MeshPhysicalMaterial({ color: '#68152f', roughness: 0.92, sheen: 0.45, sheenColor: new THREE.Color('#b04a6b'), transparent: true, bumpMap: bump, bumpScale: 0.03 })
     const innerVelvet = new THREE.MeshStandardMaterial({ color: '#250814', roughness: 1, metalness: 0, side: THREE.DoubleSide, transparent: true, bumpMap: bump, bumpScale: 0.02 })
-    const innerRim = new THREE.MeshStandardMaterial({ color: '#3d0f1d', roughness: 1, metalness: 0, side: THREE.DoubleSide, transparent: true })
-    // بطانة قاع الحوض: أغمق ليعمق إحساس التجويف بالظلال دون أي إطار بارز
-    const recessDark = new THREE.MeshStandardMaterial({ color: '#15040b', roughness: 1, metalness: 0, side: THREE.DoubleSide, transparent: true, bumpMap: bump, bumpScale: 0.015 })
     // ذهب خاص بزخرفة العلبة (منفصل عن ذهب الخاتم حتى لا يتلاشى معها)
     const trimGold = new THREE.MeshStandardMaterial({ color: '#d4a95c', metalness: 0.9, roughness: 0.28, envMapIntensity: 0.5, transparent: true })
     const gold = new THREE.MeshStandardMaterial({ color: '#d4a95c', metalness: 0.9, roughness: 0.25, envMapIntensity: 0.6 })
@@ -98,15 +95,9 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     const wallSideGeo = geo(new THREE.BoxGeometry(0.08, 0.42, 1.64))
     const wallL = addLid(new THREE.Mesh(wallSideGeo, velvet)); wallL.position.set(-1.06, 0.29, 0.9)
     const wallR = addLid(new THREE.Mesh(wallSideGeo, velvet)); wallR.position.set(1.06, 0.29, 0.9)
-    // الحوض الغائر فعليًا: أرضية عميقة مظللة وأربع جدران مبطنة، بلا أي حافة ذهبية
-    const recessFloor = addLid(new THREE.Mesh(geo(new RoundedBoxGeometry(1.76, 0.05, 1.36, 2, 0.02)), recessDark))
-    recessFloor.position.set(0, 0.3, 0.9)
-    const innerFB = geo(new THREE.BoxGeometry(1.76, 0.26, 0.04))
-    const recessFront = addLid(new THREE.Mesh(innerFB, innerRim)); recessFront.position.set(0, 0.2, 1.56)
-    const recessBack = addLid(new THREE.Mesh(innerFB, innerRim)); recessBack.position.set(0, 0.2, 0.24)
-    const innerSide = geo(new THREE.BoxGeometry(0.04, 0.26, 1.28))
-    const recessL = addLid(new THREE.Mesh(innerSide, innerRim)); recessL.position.set(-0.86, 0.2, 0.9)
-    const recessR = addLid(new THREE.Mesh(innerSide, innerRim)); recessR.position.set(0.86, 0.2, 0.9)
+    // بطانة داخلية واحدة مسطحة تمتد بين الجدران الخارجية — بلا إطارات أو حوائط داخلية
+    const lidLining = addLid(new THREE.Mesh(geo(new RoundedBoxGeometry(2.04, 0.05, 1.64, 2, 0.02)), innerVelvet))
+    lidLining.position.set(0, 0.4, 0.9)
     // صفائح ذهبية خارجية: حافة علوية ولوحة أمامية
     const lidCap = addLid(new THREE.Mesh(geo(new RoundedBoxGeometry(2.26, 0.035, 1.86, 2, 0.015)), trimGold))
     lidCap.position.set(0, 0.565, 0.9)
@@ -148,7 +139,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
 
     // spin: دوران العلبة أثناء الفتح | boxFade: تلاشي العلبة | flash: توهج الخاتم الأبيض
     const st = { open: 0, spin: 1, ringRise: 0.55, ringDepth: 0, scale: 1, spark: 0, boxFade: 0, flash: 0 }
-    const boxMats = [velvet, cushionMat, innerVelvet, innerRim, recessDark, trimGold]
+    const boxMats = [velvet, cushionMat, innerVelvet, trimGold]
     const camBase = new THREE.Vector3()
     const look = new THREE.Vector3(0, 1.05, 0)
     let w = 1, h = 1, shadowsOff = false
@@ -223,7 +214,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     return () => {
       open.kill(); zoom && zoom.kill(); cancelAnimationFrame(raf); window.removeEventListener('resize', resize)
       disposables.forEach((o) => o.dispose && o.dispose())
-      ;[velvet, cushionMat, innerVelvet, innerRim, recessDark, trimGold, gold, gemMat, envRT, pm].forEach((o) => o.dispose && o.dispose())
+      ;[velvet, cushionMat, innerVelvet, trimGold, gold, gemMat, envRT, pm].forEach((o) => o.dispose && o.dispose())
       renderer.dispose(); renderer.domElement.remove()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
