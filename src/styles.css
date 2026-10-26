@@ -20,8 +20,7 @@ h1,h2,.names{font-family:'Amiri',serif;font-weight:700}
 .floating-petals i:nth-child(1){left:8%;animation-delay:-1s}.floating-petals i:nth-child(2){left:22%;animation-delay:-4s;animation-duration:9s}.floating-petals i:nth-child(3){left:39%;animation-delay:-6s;animation-duration:8s}.floating-petals i:nth-child(4){left:55%;animation-delay:-2s;animation-duration:10s}.floating-petals i:nth-child(5){left:68%;animation-delay:-7s;animation-duration:8.5s}.floating-petals i:nth-child(6){left:79%;animation-delay:-3s;animation-duration:9.5s}.floating-petals i:nth-child(7){left:91%;animation-delay:-5s;animation-duration:7.5s}.floating-petals i:nth-child(8){left:48%;animation-delay:-8s;animation-duration:11s}
 @keyframes petal-fall{0%{transform:translate3d(0,-8vh,0) rotate(0deg)}45%{margin-left:28px}100%{transform:translate3d(-18px,116vh,0) rotate(430deg)}}
 .welcome-scene,.envelope-scene{display:grid;place-items:center;text-align:center;background:
-  linear-gradient(180deg,rgba(22,4,12,.2),rgba(10,2,7,.86)),
-  url(/assets/romantic-garden.svg) center/cover no-repeat}
+  linear-gradient(180deg,rgba(22,4,12,.2),rgba(10,2,7,.86))}
 .welcome-glow{position:absolute;width:min(90vw,520px);height:min(90vw,520px);border-radius:50%;background:rgba(245,190,171,.16);filter:blur(70px)}
 .welcome-content{position:relative;z-index:1;width:min(100%,520px);height:100%;padding:5svh 22px 3svh;display:grid;grid-template-rows:auto auto auto auto 1fr auto;align-items:start;justify-items:center}
 .welcome-logo .mono{width:clamp(78px,13svh,112px)}
@@ -56,7 +55,7 @@ h1,h2,.names{font-family:'Amiri',serif;font-weight:700}
 /* الصفحة الواحدة — عمود بنسبة هاتف في المنتصف */
 .page{position:fixed;inset:0;margin:auto;width:min(100vw,calc(100svh*9/16));overflow:hidden;background:var(--deep);
   --hands-y:62%}  /* ارتفاع اليدين/الخاتم من أعلى الصفحة: عدّليه حسب صورتك */
-.arch{position:absolute;inset:0;background:url(/assets/romantic-garden.svg) center/cover no-repeat,linear-gradient(180deg,#3b0716,#1a0509);filter:saturate(.9)}
+.arch{position:absolute;inset:0;background:linear-gradient(180deg,#3b0716,#1a0509);filter:saturate(.9)}
 .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,3,8,.55) 0,rgba(20,3,8,0) 38%,rgba(20,3,8,0) 70%,rgba(20,3,8,.7) 100%)}
 .top{position:absolute;top:3.5%;inset-inline:0;text-align:center;padding-inline:16px;text-shadow:0 2px 12px rgba(0,0,0,.55)}
 .mono{width:clamp(64px,9.5svh,92px);color:var(--gold2);display:block;margin:0 auto}
@@ -119,35 +118,46 @@ select option{color:#222}
 .demo{font-size:.8rem;opacity:.7;text-align:center}
 .done{display:grid;gap:12px;justify-items:center;text-align:center;font-family:'Amiri',serif;font-size:1.35rem}
 .done .demo{font-family:'Tajawal'}
-@media (prefers-reduced-motion:reduce){.intro-hint.show,.ringfx,.envelope,.envelope-flap,.envelope-seal,.envelope-hint{animation:none}.envelope-flap{transform:rotateX(180deg);opacity:.5}.envelope-seal{opacity:0}}
+@media (prefers-reduced-motion:reduce){.intro-hint.show,.ringfx,.envelope,.envelope-flap,.envelope-seal,.envelope-hint,.floating-petals i{animation:none}.envelope-flap{transform:rotateX(180deg);opacity:.5}.envelope-seal{opacity:0}}
 
-/* مشاهد الدعوة بعد فتح الخاتم */
-.invite-scenes{position:fixed;inset:0;overflow:hidden;background:#1a0509}
-.names-scene,.letter-scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;text-align:center}
-.names-scene{background:#f4eadb url(/assets/floral-arch-reference.png) center/cover no-repeat}
-.names-scene .floating-petals{z-index:0;opacity:.78}
+/* ===== صفحة الدعوة: صفحة واحدة بتمرير عمودي طبيعي ===== */
+.invite-page{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;background:#1a0509;
+  -webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.names-hero,.details-section{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
+.names-hero{min-height:100svh;justify-content:center;
+  padding:7svh 16px calc(12svh + env(safe-area-inset-bottom));
+  background:#f4eadb url(/assets/floral-arch-reference.png) center/cover no-repeat}
+.names-hero .floating-petals{z-index:0;opacity:.78}
 .floral-arch{position:absolute;inset:0;background:
   linear-gradient(180deg,rgba(255,250,239,.06),rgba(255,248,235,0) 45%,rgba(85,20,35,.2)),
   url(/assets/floral-arch-reference.png) center/cover no-repeat;
   opacity:.18;filter:saturate(.86);transform:scale(1.015)}
 .floral-arch:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(250,239,218,.12),rgba(38,8,18,.08) 55%,rgba(31,6,13,.45));pointer-events:none}
-.names-content{position:absolute;z-index:1;inset:3svh 16px;width:auto;margin:0;padding:3svh 18px;border:1px solid rgba(255,255,255,.42);border-radius:24px;background:rgba(255,255,255,.24);box-shadow:0 12px 35px rgba(74,24,35,.1);display:flex;flex-direction:column;align-items:center}
+.names-content{position:relative;z-index:1;width:min(100%,430px);padding:4svh 18px;
+  border:1px solid rgba(255,255,255,.42);border-radius:24px;background:rgba(255,255,255,.24);
+  box-shadow:0 12px 35px rgba(74,24,35,.1);display:flex;flex-direction:column;align-items:center}
 .scene-logo{margin-top:0}.client-logo{display:block;width:clamp(76px,12svh,108px);aspect-ratio:1;background:currentColor;color:#4a0a1c;mask:url(/assets/client-logo.png) center/contain no-repeat;-webkit-mask:url(/assets/client-logo.png) center/contain no-repeat}
 .scene-kicker,.paper-kicker{margin-top:1svh;color:#4a0a1c;font-size:.95rem;letter-spacing:.12em}
-.names-scene h1{display:flex;align-items:center;gap:.35em;margin-top:.5svh;color:#4a0a1c;font-family:'Amiri',serif;font-weight:700;font-size:clamp(2.5rem,10vw,4rem);line-height:1.15;text-shadow:0 2px 8px rgba(255,255,255,.7)}
-.names-scene h1 i{font-style:normal;color:#4a0a1c;font-size:.6em}
-.engagement-quote{margin-top:auto;margin-bottom:8svh;max-width:320px;padding:1.1svh 18px;color:#4a0a1c;font-family:'Amiri',serif;font-size:clamp(1.05rem,4.4vw,1.4rem);line-height:1.8;text-shadow:0 1px 6px rgba(255,255,255,.8);background:rgba(255,248,235,.78);border:1px solid rgba(126,65,57,.2);border-radius:14px;box-shadow:0 5px 18px rgba(74,24,35,.12)}
+.names-hero h1{display:flex;align-items:center;gap:.35em;margin-top:.5svh;color:#4a0a1c;font-family:'Amiri',serif;font-weight:700;font-size:clamp(2.5rem,10vw,4rem);line-height:1.15;text-shadow:0 2px 8px rgba(255,255,255,.7)}
+.names-hero h1 i{font-style:normal;color:#4a0a1c;font-size:.6em}
+.engagement-quote{margin-top:2.5svh;max-width:320px;padding:1.1svh 18px;color:#4a0a1c;font-family:'Amiri',serif;font-size:clamp(1.05rem,4.4vw,1.4rem);line-height:1.8;text-shadow:0 1px 6px rgba(255,255,255,.8);background:rgba(255,248,235,.78);border:1px solid rgba(126,65,57,.2);border-radius:14px;box-shadow:0 5px 18px rgba(74,24,35,.12)}
 .engagement-quote span{display:block}.engagement-quote span+span{margin-top:.7svh}
-.arrived-ring{position:absolute;z-index:3;top:48%;left:50%;width:110px;height:110px;margin:-55px 0 0 -55px;pointer-events:none;animation:ring-arrival 1.5s cubic-bezier(.2,.75,.25,1) both}
-.arrived-ring canvas{display:block;width:100%;height:100%;filter:drop-shadow(0 0 7px rgba(218,178,103,.9))}
-@keyframes ring-arrival{0%{opacity:0;transform:scale(3.7) translateY(-22vh) rotateX(0) rotateZ(-25deg)}65%{opacity:1;transform:scale(.75) translateY(0) rotateX(58deg) rotateZ(8deg)}100%{opacity:.9;transform:scale(1) translateY(0) rotateX(58deg) rotateZ(0)}}
-.scene-line{max-width:320px;margin-inline:auto;color:#6b3540;font-size:clamp(.85rem,3.3vw,1rem)}
-.scene-next,.scene-back{margin-bottom:4svh;min-height:48px;padding:0 28px;border:1px solid var(--gold);border-radius:999px;color:var(--gold2);background:rgba(25,5,13,.58);font-weight:700}
-.names-scene .scene-next{margin-top:auto;margin-bottom:0}
-.letter-scene{justify-content:center;padding:4svh 18px;background:#f4eadb url(/assets/floral-arch-reference.png) center/cover no-repeat}
-.letter-scene .floating-petals{z-index:3}
+
+/* سهم التلميح بالتمرير — يختفي بعد أول سحب */
+.scroll-hint{position:absolute;z-index:2;bottom:max(4svh,18px);inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:2px;
+  color:#4a0a1c;transition:opacity .5s ease;pointer-events:none}
+.scroll-hint span{font-family:'Amiri',serif;font-size:1.05rem;text-shadow:0 1px 6px rgba(255,255,255,.8)}
+.scroll-hint svg{width:26px;height:26px;animation:hint-bob 1.8s ease-in-out infinite}
+.scroll-hint.hide{opacity:0}
+@keyframes hint-bob{50%{transform:translateY(7px)}}
+@media (prefers-reduced-motion:reduce){.scroll-hint svg{animation:none}}
+
+/* قسم التفاصيل وورقة الدعوة */
+.details-section{position:relative;padding:7svh 18px calc(9svh + env(safe-area-inset-bottom));
+  background:#f4eadb url(/assets/floral-arch-reference.png) center/cover no-repeat}
+.details-section .floating-petals{z-index:3}
 .floral-arch-paper{opacity:.09;filter:saturate(.65);mix-blend-mode:multiply}
-.invitation-paper{position:relative;z-index:2;width:min(100%,430px);min-height:min(82svh,690px);padding:6svh 8% 4svh;color:#4b1823;background:rgba(255,248,235,.82);box-shadow:0 20px 50px rgba(0,0,0,.48);transform:rotate(-1deg);clip-path:polygon(1% 1%,98% 0,100% 98%,2% 100%,0 52%)}
+.invitation-paper{position:relative;z-index:2;width:min(100%,430px);min-height:min(78svh,660px);margin:0 auto;padding:6svh 8% 4svh;color:#4b1823;background:rgba(255,248,235,.82);box-shadow:0 20px 50px rgba(0,0,0,.48);transform:rotate(-1deg);clip-path:polygon(1% 1%,98% 0,100% 98%,2% 100%,0 52%)}
 .invitation-paper:before,.invitation-paper:after{content:'';position:absolute;pointer-events:none;border:1px solid rgba(126,65,57,.3)}
 .invitation-paper:before{inset:14px;border-radius:45% 52% 48% 50%}.invitation-paper:after{inset:22px;border-radius:50%;border-style:dashed;opacity:.6}
 .invitation-paper h1{position:relative;z-index:1;margin-top:1svh;font-size:clamp(2.8rem,11vw,4rem);color:#651f32}
@@ -163,11 +173,10 @@ select option{color:#222}
 .place-scrap:before{content:'✦  ❦  ✦';top:5px}
 .place-scrap:after{content:'✦  ❦  ✦';bottom:3px}
 .paper-monogram{position:relative;z-index:1;margin:2svh auto 0;width:100%;display:flex;justify-content:center}.paper-monogram .client-logo{width:84px;color:#4a0a1c;margin-inline:auto}
-.flower{position:absolute;z-index:2;color:#e9adac;text-shadow:0 3px 9px rgba(0,0,0,.3);font-size:clamp(5rem,18vw,8rem);filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
-.flower-one{top:5%;left:-3%;transform:rotate(-25deg)}.flower-two{right:-3%;bottom:9%;transform:rotate(20deg);color:#d8909e}
 .calendar-grid{width:100%;margin-top:6px;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-family:'Tajawal',sans-serif;font-size:.72rem;direction:rtl}
 .calendar-month{font-size:.95rem!important;color:#4a0a1c!important;font-weight:700;letter-spacing:.02em}
 .calendar-weekday{color:#8d3c50;font-weight:700}
 .calendar-day{display:grid;place-items:center;min-height:19px;color:#4b1823}
 .calendar-day.selected{width:22px;height:22px;margin:auto;border-radius:50%;color:#fff8eb;background:#741f39;font-weight:700}
-.scene-back{position:absolute;bottom:3svh;margin:0;font-size:.8rem;min-height:38px;padding:0 20px}
+.paper-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:3svh}
+.paper-actions .btn-gold,.paper-actions .btn-line{min-height:46px;padding:0 22px;font-size:.95rem;text-decoration:none}
