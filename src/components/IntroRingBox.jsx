@@ -106,17 +106,14 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     const crown = new THREE.Mesh(crownGeo, gemMat); crown.position.y = 0.045
     const pavilion = new THREE.Mesh(pavilionGeo, gemMat); pavilion.rotation.z = Math.PI; pavilion.position.y = -0.095
     gem.add(crown, pavilion)
-    // أربع مخالب ذهبية رفيعة تمسك الحجر من حزام الوسط
-    const prongGeo = geo(new THREE.CylinderGeometry(0.011, 0.016, 0.17, 8))
-    for (let i = 0; i < 4; i++) {
-      const a = (i / 4) * Math.PI * 2 + Math.PI / 4
-      const prong = new THREE.Mesh(prongGeo, gold)
-      prong.position.set(Math.cos(a) * 0.108, -0.015, Math.sin(a) * 0.108)
-      gem.add(prong)
-    }
-    gem.position.y = 0.38
+    // كأس ذهبي (bezel) يلف النصف السفلي المدبب ويخفيه داخل الخاتم كالتركيب الحقيقي
+    const cup = new THREE.Mesh(geo(new THREE.CylinderGeometry(0.098, 0.018, 0.14, 8)), gold)
+    cup.position.y = -0.13
+    gem.add(cup)
+    // الحجر منخفض قليلًا حتى يستوي حزامه مع قمة الحلقة ويبدو مركّبًا داخلها
+    gem.position.y = 0.335
     ring.add(band, gem)
-    const gemCasters = [crown, pavilion]
+    const gemCasters = [crown, pavilion, cup]
     const ringGlow = new THREE.PointLight('#ffe8ad', 0, 3.2)
     ringGlow.position.set(0, 0.35, 0.18); ring.add(ringGlow)
     box.add(base, cushion, rimTrim, lid, ring)
