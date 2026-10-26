@@ -64,8 +64,7 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
       geo(new RoundedBoxGeometry(2.2, 1, 1.8, 4, 0.08)),       // 0 القاعدة
       geo(new RoundedBoxGeometry(2, 0.2, 1.6, 3, 0.05)),        // 1 الوسادة
       geo(new THREE.BoxGeometry(2.24, 0.04, 1.84)),             // 2 إطار ذهبي علوي
-      geo(new RoundedBoxGeometry(2.2, 0.55, 1.8, 4, 0.08)),     // 3 الغطاء
-      geo(new THREE.TorusGeometry(0.3, 0.055, 24, 64)),         // 4 حلقة الخاتم
+      geo(new THREE.TorusGeometry(0.3, 0.055, 24, 64)),         // 3 حلقة الخاتم
     ]
     const box = new THREE.Group(); box.scale.setScalar(BOX_SCALE); scene.add(box)
     const boxCasters = [] // كل أجزاء العلبة التي تُلقي ظلًا (تُوقف لحظة تلاشيها)
@@ -86,38 +85,57 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
       const h = new THREE.Mesh(hingeGeo, trimGold); h.rotation.z = Math.PI / 2; h.position.set(x, 1.02, -0.93); box.add(h); h.castShadow = true; boxCasters.push(h)
     })
     const lid = new THREE.Group(); lid.position.set(0, 1.02, -0.9)
-    const lidMesh = new THREE.Mesh(geos[3], velvet); lidMesh.position.set(0, 0.275, 0.9)
-    const lidCavity = new THREE.Mesh(geo(new RoundedBoxGeometry(1.72, 0.025, 1.3, 6, 0.08)), innerVelvet)
-    lidCavity.position.set(0, -0.018, 0.9)
-    const cavityRim = new THREE.Mesh(geo(new RoundedBoxGeometry(1.84, 0.018, 1.42, 6, 0.08)), innerRim)
-    cavityRim.position.set(0, -0.009, 0.9)
-    // صفائح ذهبية على الغطاء: حافة علوية ولوحة أمامية
-    const lidCap = new THREE.Mesh(geo(new RoundedBoxGeometry(2.26, 0.035, 1.86, 2, 0.015)), trimGold)
-    lidCap.position.set(0, 0.575, 0.9)
-    const lidPlate = new THREE.Mesh(geo(new THREE.BoxGeometry(0.72, 0.11, 0.03)), trimGold)
+    const lidParts = []
+    const addLid = (mesh) => { lid.add(mesh); lidParts.push(mesh); return mesh }
+    // هيكل الغطاء: صفيحة علوية وأربع جدران، والوجه السفلي مفتوح (تجويف حقيقي لا لوحة ملصقة)
+    const lidTop = addLid(new THREE.Mesh(geo(new RoundedBoxGeometry(2.2, 0.1, 1.8, 2, 0.04)), velvet))
+    lidTop.position.set(0, 0.5, 0.9)
+    const wallFB = geo(new THREE.BoxGeometry(2.04, 0.42, 0.08))
+    const wallFront = addLid(new THREE.Mesh(wallFB, velvet)); wallFront.position.set(0, 0.29, 1.76)
+    const wallBack = addLid(new THREE.Mesh(wallFB, velvet)); wallBack.position.set(0, 0.29, 0.04)
+    const wallSideGeo = geo(new THREE.BoxGeometry(0.08, 0.42, 1.64))
+    const wallL = addLid(new THREE.Mesh(wallSideGeo, velvet)); wallL.position.set(-1.06, 0.29, 0.9)
+    const wallR = addLid(new THREE.Mesh(wallSideGeo, velvet)); wallR.position.set(1.06, 0.29, 0.9)
+    // الحوض الغائر فعليًا: أرضية داخلية عميقة وأربع جدران مبطنة
+    const recessFloor = addLid(new THREE.Mesh(geo(new RoundedBoxGeometry(1.76, 0.05, 1.36, 2, 0.02)), innerVelvet))
+    recessFloor.position.set(0, 0.215, 0.9)
+    const innerFB = geo(new THREE.BoxGeometry(1.76, 0.14, 0.04))
+    const recessFront = addLid(new THREE.Mesh(innerFB, innerRim)); recessFront.position.set(0, 0.145, 1.56)
+    const recessBack = addLid(new THREE.Mesh(innerFB, innerRim)); recessBack.position.set(0, 0.145, 0.24)
+    const innerSide = geo(new THREE.BoxGeometry(0.04, 0.14, 1.28))
+    const recessL = addLid(new THREE.Mesh(innerSide, innerRim)); recessL.position.set(-0.86, 0.145, 0.9)
+    const recessR = addLid(new THREE.Mesh(innerSide, innerRim)); recessR.position.set(0.86, 0.145, 0.9)
+    // حافة ذهبية رفيعة تحيط بفتحة الحوض
+    const rimFB = geo(new THREE.BoxGeometry(1.84, 0.025, 0.05))
+    const rimLidF = addLid(new THREE.Mesh(rimFB, trimGold)); rimLidF.position.set(0, 0.082, 1.58)
+    const rimLidB = addLid(new THREE.Mesh(rimFB, trimGold)); rimLidB.position.set(0, 0.082, 0.22)
+    const rimSide = geo(new THREE.BoxGeometry(0.05, 0.025, 1.36))
+    const rimLidL = addLid(new THREE.Mesh(rimSide, trimGold)); rimLidL.position.set(-0.9, 0.082, 0.9)
+    const rimLidR = addLid(new THREE.Mesh(rimSide, trimGold)); rimLidR.position.set(0.9, 0.082, 0.9)
+    // صفائح ذهبية خارجية: حافة علوية ولوحة أمامية
+    const lidCap = addLid(new THREE.Mesh(geo(new RoundedBoxGeometry(2.26, 0.035, 1.86, 2, 0.015)), trimGold))
+    lidCap.position.set(0, 0.565, 0.9)
+    const lidPlate = addLid(new THREE.Mesh(geo(new THREE.BoxGeometry(0.72, 0.11, 0.03)), trimGold))
     lidPlate.position.set(0, 0.3, 1.81)
-    lid.add(lidMesh, lidCavity, cavityRim, lidCap, lidPlate)
     const ring = new THREE.Group(); ring.position.set(0, 1.45, 0)
-    const band = new THREE.Mesh(geos[4], gold)
-    // ألماسة بقطع لامع كلاسيكي: تاج ثماني مسطح فوق خيمة مدببة (بدل الهرم المسطح)
+    const band = new THREE.Mesh(geos[3], gold)
+    // ألماسة: تاج لامع مركّب داخل الحلقة فقط — بلا أي جزء مدبب تحتها
     const gem = new THREE.Group()
     const crownGeo = geo(new THREE.CylinderGeometry(0.085, 0.132, 0.085, 8, 1))
-    const pavilionGeo = geo(new THREE.ConeGeometry(0.132, 0.19, 8, 1))
     const crown = new THREE.Mesh(crownGeo, gemMat); crown.position.y = 0.045
-    const pavilion = new THREE.Mesh(pavilionGeo, gemMat); pavilion.rotation.z = Math.PI; pavilion.position.y = -0.095
-    gem.add(crown, pavilion)
-    // كأس ذهبي (bezel) يلف النصف السفلي المدبب ويخفيه داخل الخاتم كالتركيب الحقيقي
-    const cup = new THREE.Mesh(geo(new THREE.CylinderGeometry(0.098, 0.018, 0.14, 8)), gold)
-    cup.position.y = -0.13
-    gem.add(cup)
-    // الحجر منخفض قليلًا حتى يستوي حزامه مع قمة الحلقة ويبدو مركّبًا داخلها
-    gem.position.y = 0.335
+    gem.add(crown)
+    // حامل ذهبي مسطّح يخفي قاعدة الحجر داخل الحلقة (بدون طرف مدبب)
+    const seat = new THREE.Mesh(geo(new THREE.CylinderGeometry(0.105, 0.105, 0.045, 8)), gold)
+    seat.position.y = -0.012
+    gem.add(seat)
+    // الحجر منخفض قليلًا حتى يستوي حزامه مع قمة الحلقة ويبدو مركّبًا فيها
+    gem.position.y = 0.34
     ring.add(band, gem)
-    const gemCasters = [crown, pavilion, cup]
+    const gemCasters = [crown, seat]
     const ringGlow = new THREE.PointLight('#ffe8ad', 0, 3.2)
     ringGlow.position.set(0, 0.35, 0.18); ring.add(ringGlow)
     box.add(base, cushion, rimTrim, lid, ring)
-    ;[base, cushion, rimTrim, lidMesh, band, ...gemCasters].forEach((m) => { m.castShadow = true; m.receiveShadow = true; boxCasters.push(m) })
+    ;[base, cushion, rimTrim, band, ...lidParts, ...gemCasters].forEach((m) => { m.castShadow = true; m.receiveShadow = true; boxCasters.push(m) })
 
     // إضاءة وظل أرضي ناعم
     scene.add(new THREE.AmbientLight('#f6d9d1', 0.22))
