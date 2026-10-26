@@ -9,5 +9,4 @@ export const invite = {
   city: 'طرابلس، ليبيا',
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Tripoli+Libya', // ⚠️ استبدليه برابط موقع القاعة
   whatsapp: '',                                // رقم واتساب لتلقي الردود بصيغة دولية بدون أصفار بادئة، مثال: 218912345678 — اتركيه فارغًا لإخفاء الزر
-  rsvp: { maxCompanions: 3 },
 }
