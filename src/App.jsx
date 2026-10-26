@@ -1,8 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import IntroRingBox from './components/IntroRingBox.jsx'
-import InvitePage from './components/InvitePage.jsx'
 import useReducedMotion from './hooks/useReducedMotion.js'
+
+// تحميل ثلاثي الأبعاد (three.js) عند الحاجة فقط لتسريع أول تحميل للصفحة
+const IntroRingBox = lazy(() => import('./components/IntroRingBox.jsx'))
+const InvitePage = lazy(() => import('./components/InvitePage.jsx'))
+
+function IntroFallback() {
+  return (
+    <section className="intro" aria-label="جارٍ تجهيز الدعوة">
+      <p className="intro-hint show">جارٍ تجهيز الدعوة…</p>
+    </section>
+  )
+}
 
 export default function App() {
   const [stage, setStage] = useState('intro')
@@ -17,7 +27,11 @@ export default function App() {
 
   return (
     <>
-      {stage === 'intro' ? <IntroRingBox veilRef={veil} reduce={reduce} onDone={() => setStage('page')} /> : <InvitePage reduce={reduce} />}
+      <Suspense fallback={<IntroFallback />}>
+        {stage === 'intro'
+          ? <IntroRingBox veilRef={veil} reduce={reduce} onDone={() => setStage('page')} />
+          : <InvitePage reduce={reduce} />}
+      </Suspense>
       <div className="veil" ref={veil} aria-hidden="true" />
     </>
   )

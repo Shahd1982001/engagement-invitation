@@ -117,8 +117,8 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
       <div className="floating-petals" aria-hidden="true">
         <i /><i /><i /><i /><i /><i /><i /><i />
       </div>
-      <button ref={btn} className={`ring-hit ${phase}`} onClick={click} disabled={phase === 'closed' || phase === 'going'} aria-label="اضغطي على الخاتم لفتح الدعوة" />
-      <p className={`intro-hint ${phase === 'ready' || phase === 'fallback' ? 'show' : ''}`} aria-live="polite">اضغطي على الخاتم</p>
+      <button ref={btn} className={`ring-hit ${phase}`} onClick={click} disabled={phase === 'closed' || phase === 'going'} aria-label="اضغطوا على الخاتم لفتح الدعوة" />
+      <p className={`intro-hint ${phase === 'ready' || phase === 'fallback' ? 'show' : ''}`} aria-live="polite">اضغطوا على الخاتم</p>
     </section>
   )
 }
