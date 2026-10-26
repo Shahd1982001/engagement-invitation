@@ -55,7 +55,8 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     // ذهب خاص بزخرفة العلبة (منفصل عن ذهب الخاتم حتى لا يتلاشى معها)
     const trimGold = new THREE.MeshStandardMaterial({ color: '#d4a95c', metalness: 0.9, roughness: 0.28, envMapIntensity: 0.5, transparent: true })
     const gold = new THREE.MeshStandardMaterial({ color: '#d4a95c', metalness: 0.9, roughness: 0.25, envMapIntensity: 0.6 })
-    const gemMat = new THREE.MeshPhysicalMaterial({ color: '#fff8e8', roughness: 0.12, metalness: 0, clearcoat: 0.8, envMapIntensity: 0.7, flatShading: true, emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0 })
+    // حجر ألماس: لمعان قزحي خفيف مع سطح صافٍ يستفيد من انعكاسات البيئة
+    const gemMat = new THREE.MeshPhysicalMaterial({ color: '#fdf7ee', roughness: 0.06, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.15, flatShading: true, iridescence: 0.35, iridescenceIOR: 1.3, emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0 })
 
     const disposables = [bump]
     const geo = (g) => { disposables.push(g); return g }
@@ -65,7 +66,6 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
       geo(new THREE.BoxGeometry(2.24, 0.04, 1.84)),             // 2 إطار ذهبي علوي
       geo(new RoundedBoxGeometry(2.2, 0.55, 1.8, 4, 0.08)),     // 3 الغطاء
       geo(new THREE.TorusGeometry(0.3, 0.055, 24, 64)),         // 4 حلقة الخاتم
-      geo(new THREE.OctahedronGeometry(0.16, 0)),               // 5 حجر الألماس
     ]
     const box = new THREE.Group(); box.scale.setScalar(BOX_SCALE); scene.add(box)
     const boxCasters = [] // كل أجزاء العلبة التي تُلقي ظلًا (تُوقف لحظة تلاشيها)
@@ -98,12 +98,29 @@ export default function IntroRingBox({ onDone, veilRef, reduce }) {
     lidPlate.position.set(0, 0.3, 1.81)
     lid.add(lidMesh, lidCavity, cavityRim, lidCap, lidPlate)
     const ring = new THREE.Group(); ring.position.set(0, 1.45, 0)
-    const band = new THREE.Mesh(geos[4], gold), gem = new THREE.Mesh(geos[5], gemMat)
-    gem.position.y = 0.35; gem.scale.set(1, 1.25, 1); ring.add(band, gem)
+    const band = new THREE.Mesh(geos[4], gold)
+    // ألماسة بقطع لامع كلاسيكي: تاج ثماني مسطح فوق خيمة مدببة (بدل الهرم المسطح)
+    const gem = new THREE.Group()
+    const crownGeo = geo(new THREE.CylinderGeometry(0.085, 0.132, 0.085, 8, 1))
+    const pavilionGeo = geo(new THREE.ConeGeometry(0.132, 0.19, 8, 1))
+    const crown = new THREE.Mesh(crownGeo, gemMat); crown.position.y = 0.045
+    const pavilion = new THREE.Mesh(pavilionGeo, gemMat); pavilion.rotation.z = Math.PI; pavilion.position.y = -0.095
+    gem.add(crown, pavilion)
+    // أربع مخالب ذهبية رفيعة تمسك الحجر من حزام الوسط
+    const prongGeo = geo(new THREE.CylinderGeometry(0.011, 0.016, 0.17, 8))
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 + Math.PI / 4
+      const prong = new THREE.Mesh(prongGeo, gold)
+      prong.position.set(Math.cos(a) * 0.108, -0.015, Math.sin(a) * 0.108)
+      gem.add(prong)
+    }
+    gem.position.y = 0.38
+    ring.add(band, gem)
+    const gemCasters = [crown, pavilion]
     const ringGlow = new THREE.PointLight('#ffe8ad', 0, 3.2)
     ringGlow.position.set(0, 0.35, 0.18); ring.add(ringGlow)
     box.add(base, cushion, rimTrim, lid, ring)
-    ;[base, cushion, rimTrim, lidMesh, band, gem].forEach((m) => { m.castShadow = true; m.receiveShadow = true; boxCasters.push(m) })
+    ;[base, cushion, rimTrim, lidMesh, band, ...gemCasters].forEach((m) => { m.castShadow = true; m.receiveShadow = true; boxCasters.push(m) })
 
     // إضاءة وظل أرضي ناعم
     scene.add(new THREE.AmbientLight('#f6d9d1', 0.22))
