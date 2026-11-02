@@ -33,14 +33,6 @@ export default function App() {
           : <InvitePage reduce={reduce} />}
       </Suspense>
       <div className="veil" ref={veil} aria-hidden="true" />
-      <aside className="music-player" aria-label="موسيقى الدعوة">
-        <iframe
-          title="موسيقى الدعوة: Golden Brown"
-          src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fcallum-tigwell%2Fgolden-brown-ending-part&color=%234a0a1c&auto_play=true&show_comments=false&show_user=true&show_reposts=false&visual=false"
-          allow="autoplay"
-          scrolling="no"
-        />
-      </aside>
     </>
   )
 }

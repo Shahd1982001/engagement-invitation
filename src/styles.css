@@ -176,6 +176,3 @@ h1,h2,.names{font-family:'Amiri',serif;font-weight:700}
 .paper-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:3svh}
 .paper-actions .btn-gold,.paper-actions .btn-line{min-height:46px;padding:0 22px;font-size:.95rem;text-decoration:none}
 
-/* مشغّل الموسيقى يبقى متاحاً أثناء الافتتاحية وصفحة الدعوة */
-.music-player{position:fixed;z-index:210;top:max(10px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left));width:min(260px,calc(100vw - 20px));border-radius:10px;overflow:hidden;box-shadow:0 4px 18px rgba(40,5,15,.2);background:#fff}
-.music-player iframe{display:block;width:100%;height:166px;border:0}
