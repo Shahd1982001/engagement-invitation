@@ -29,19 +29,11 @@ function CalendarScrap({ date }) {
   )
 }
 
-function whatsappLink(d) {
-  const phone = invite.whatsapp?.replace(/[^\d]/g, '')
-  if (!phone) return ''
-  const text = `السلام عليكم، نود تأكيد الحضور لحفل خطوبة ${invite.bride} و${invite.groom} يوم ${d.weekday} ${d.day} ${d.month} ${d.year} الساعة ${d.time} ${d.ampm}.`
-  return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
-}
-
 export default function InvitePage({ reduce }) {
   const root = useRef(null)
   const [hint, setHint] = useState(true)
   const d = dateParts(invite.dateTime, invite.timeZone)
   const calendarDate = new Date(invite.dateTime)
-  const wa = whatsappLink(d)
 
   // ظهور تدريجي: قسم الأسماء عند الدخول، وورقة التفاصيل عند الوصول إليها بالتمرير
   useLayoutEffect(() => {
@@ -119,11 +111,6 @@ export default function InvitePage({ reduce }) {
               <span>{invite.city}</span>
               <a href={invite.mapsUrl} target="_blank" rel="noopener noreferrer">موقع المكان</a>
             </div>
-          </div>
-          <div className="paper-actions">
-            {wa && (
-              <a className="btn-line" href={wa} target="_blank" rel="noopener noreferrer">رد عبر واتساب</a>
-            )}
           </div>
           <div className="paper-monogram">
             <span className="client-logo" role="img" aria-label="شعار الدعوة" />
