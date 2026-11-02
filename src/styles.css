@@ -176,3 +176,9 @@ h1,h2,.names{font-family:'Amiri',serif;font-weight:700}
 .paper-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:3svh}
 .paper-actions .btn-gold,.paper-actions .btn-line{min-height:46px;padding:0 22px;font-size:.95rem;text-decoration:none}
 
+
+/* زر صغير للموسيقى، متاح من بداية الدعوة */
+.music-toggle{position:fixed;z-index:210;top:max(18px,env(safe-area-inset-top));left:max(18px,env(safe-area-inset-left));width:44px;height:44px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.7);border-radius:50%;background:rgba(74,10,28,.45);color:#fff;font-size:1.4rem;line-height:1;box-shadow:0 4px 15px rgba(0,0,0,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.music-toggle.playing{background:rgba(157,112,30,.7);border-color:#f7e7a9;animation:music-glow 2s ease-in-out infinite}
+@keyframes music-glow{0%,100%{box-shadow:0 0 12px rgba(212,175,55,.4)}50%{box-shadow:0 0 22px rgba(212,175,55,.8)}}
+@media (prefers-reduced-motion:reduce){.music-toggle.playing{animation:none}}
