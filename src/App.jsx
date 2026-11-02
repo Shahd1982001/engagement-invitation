@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import useReducedMotion from './hooks/useReducedMotion.js'
+import BackgroundMusic from './components/BackgroundMusic.jsx'
 
 // تحميل ثلاثي الأبعاد (three.js) عند الحاجة فقط لتسريع أول تحميل للصفحة
 const IntroRingBox = lazy(() => import('./components/IntroRingBox.jsx'))
@@ -33,6 +34,7 @@ export default function App() {
           : <InvitePage reduce={reduce} />}
       </Suspense>
       <div className="veil" ref={veil} aria-hidden="true" />
+      <BackgroundMusic />
     </>
   )
 }
